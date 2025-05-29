@@ -13,6 +13,9 @@ use App\Http\Controllers\PageController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', action: function () {
+    return view('welcome');
+});
 
 Route::get('/produk', function () {
     return view('pemasaran.produk');
