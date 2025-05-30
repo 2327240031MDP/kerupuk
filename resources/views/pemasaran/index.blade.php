@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: Arial, sans-serif; background: linear-gradient(to right, #ffecec, #ffdbdb); margin: 0; padding: 0; }
-        header { background: #b00000; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header { background: #b00000; color: #ffdbdb; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
         .navbar-title { font-size: 20px; font-weight: bold; }
         .nav-links a { color: #ffdbdb; margin-left: 20px; text-decoration: none; font-weight: bold; }
         .nav-links a:hover { text-decoration: underline; }
