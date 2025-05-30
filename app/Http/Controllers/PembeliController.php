@@ -14,8 +14,7 @@ class PembeliController extends Controller
             'notelp' => 'required|string|max:20',
             'alamat' => 'required|string',
         ]);
-
-    // Simpan ke database
+        
         Pembeli::create([
             'nama' => $validated['nama'],
             'notelp' => $validated['notelp'],
@@ -24,5 +23,10 @@ class PembeliController extends Controller
         ]);
 
         return response()->json(['message' => 'Data berhasil disimpan.'], 200);
+    }
+        public function index()
+    {
+        $pembelian = Pembeli::latest()->get();
+        return view('pemasaran.index', compact('pembelian'));
     }
 }

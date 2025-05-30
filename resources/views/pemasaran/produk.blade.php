@@ -6,10 +6,10 @@
   <title>Produk Kerupuk - Toko 619</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-dBwEXRJBgrzWZ2vSP1XRVQu/jKkQfbtIsXf1T9pUjE3rVULK4e4I2V6KXfU7uzWq+6YBfZ6inB/b5y3lYzLL7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 0; margin: 0; background: linear-gradient(135deg, #f0f0f0, #ffffff); color: #333; }
-    header { background-color: #b00000; padding: 10px 20px; color: white; display: flex; align-items: center; justify-content: space-between; }
+    body { font-family: Arial, sans-serif; padding: 0; margin: 0; background: linear-gradient(135deg, #ffffff, #ffdbdb); color: #333; }
+    header { background-color: #b00000; padding: 10px 20px; color: #ffdbdb; display: flex; align-items: center; justify-content: space-between; }
     .navbar-title { font-size: 20px; font-weight: bold; }
-    .nav-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; }
+    .nav-links a { color: #ffdbdb; margin-left: 20px; text-decoration: none; font-weight: bold; }
     .nav-links a:hover { text-decoration: underline; }
     .container { padding: 20px; max-width: 1200px; margin: auto; }
     h1 { text-align: center; margin-bottom: 20px; color: #b00000; }
@@ -17,17 +17,16 @@
     .search-container { text-align: center; margin-bottom: 20px; }
     .search-input { width: 100%; max-width: 500px; padding: 10px; border-radius: 6px; border: 1px solid #b00000; }
     .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .card { position: relative; border: 2px solid #b00000; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .card { border: 2px solid #b00000; border-radius: 12px; overflow: hidden; background: #ffeaea; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .card:hover { transform: translateY(-5px); }
-    .fav-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1; }
     .card img { width: 100%; height: 180px; object-fit: cover; }
     .card-content { padding: 16px; }
-    .card-content h3 { margin: 0 0 10px 0; color: #b00000; text-align: left; } /* Adjusted text-align */
+    .card-content h3 { margin: 0 0 10px 0; color: #b00000; text-align: left; }
     .card-content p { margin: 0; color: #555; font-size: 14px; }
     .ad-container { margin: 20px 0; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .ad-slider { display: flex; transition: transform 0.5s ease; } /* This transition will now work */
+    .ad-slider { display: flex; transition: transform 0.5s ease; }
     .ad-slide { min-width: 100%; box-sizing: border-box; }
-    .ad-slide img { width: 100%; height: auto; aspect-ratio: 16/6; object-fit: cover; display: block; }
+    .ad-slide img { width: 100%; height: auto; aspect-ratio: 2/1; object-fit: cover; display: block; }
     .slider-nav { position: absolute; top: 50%; left: 0; right: 0; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 15px; z-index: 2; }
     .slider-btn { background: rgba(255,255,255,0.8); color: #b00000; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: all 0.3s ease; }
     .slider-btn:hover { background: #b00000; color: white; transform: scale(1.1); }
@@ -42,6 +41,7 @@
     <nav class="nav-links">
       <a href="/produk">Produk</a>
       <a href="/pembelian">Pembelian</a>
+      <a href="/histori">Histori Pembelian</a>
     </nav>
   </header>
 
@@ -87,13 +87,13 @@
 
   <script>
     const products = [
-      { id: 1, name: "Kerupuk Sanggul", image: "Screenshot 2025-05-28 200120.png", desc: "Kerupuk udang renyah berbentuk sanggul, cocok untuk lauk atau camilan." },
-      { id: 2, name: "Getas", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Kerupuk ikan tradisional khas pesisir dengan rasa gurih menggoda." },
-      { id: 3, name: "Kerupuk 1", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Varian klasik kerupuk udang dengan aroma khas dan tekstur renyah." },
-      { id: 4, name: "Kerupuk 2", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Kerupuk ikan dengan bumbu khas dan rasa autentik Indonesia." },
-      { id: 5, name: "Kerupuk 3", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Pilihan ekonomis untuk kerupuk udang rasa original." },
-      { id: 6, name: "Kerupuk 4", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Kerupuk ikan padat rasa, cocok untuk pelengkap makanan berat." },
-      { id: 7, name: "Kerupuk 5", image: "suir6jg3ujfu8j6fw0fpovp9z6lkgjwv.jpg", desc: "Kerupuk bawang ringan dan renyah dengan aroma bawang menggoda." }
+      { id: 1, name: "Super Kancing", image: "superkancing.jpg", desc: "Kerupuk udang renyah berbentuk kancing, cocok untuk lauk atau camilan." },
+      { id: 2, name: "Kerupuk Sanggul Mini", image: "sanggulmini.jpg", desc: "Kerupuk ikan tradisional khas pesisir dengan rasa gurih menggoda." },
+      { id: 3, name: "Kerupuk Sanggul", image: "kerupuksanggul.jpg", desc: "Kerupuk khas berbentuk sanggul dengan rasa gurih dan tekstur renyah." },
+      { id: 4, name: "Kerupuk Mawar", image: "kerupukmawar.jpg", desc: "Varian klasik kerupuk udang dengan aroma khas dan tekstur renyah." },
+      { id: 5, name: "Kerupuk Mawar Udang", image: "kerupukmawarudang.jpg", desc: "Kerupuk ikan dengan bumbu khas dan rasa autentik Indonesia." },
+      { id: 6, name: "Kerupuk Teratai", image: "kerupukteratai.jpg", desc: "Kerupuk bawang ringan dan renyah dengan aroma bawang menggoda." },
+      { id: 7, name: "Getas", image: "getas.jpg", desc: "Kerupuk ikan padat rasa, cocok untuk pelengkap makanan berat." }
     ];
 
     const adSlider = document.getElementById("adSlider");
@@ -147,7 +147,7 @@
       showSlide(index);
     }
 
-    let favorites = new Set();
+    // let favorites = new Set(); /* Removed */
     const $ = id => document.getElementById(id); 
 
     const renderProducts = (filter = '') => {
@@ -157,25 +157,17 @@
       const list = products
         .filter(p => p.name.toLowerCase().includes(filter.toLowerCase()))
         .map(p => `
-        <div class="card">
-          <button class="fav-btn" onclick="event.stopPropagation(); toggleFavorite(${p.id})">
-            <i class="${favorites.has(p.id) ? 'fas' : 'far'} fa-heart"></i>
-          </button>
-          <a href="/produk/${p.id}" style="text-decoration:none; color:inherit; display:block;">
-            <img src="/images/${p.image}" alt="${p.name}" />
-            <div class="card-content">
-              <h3>${p.name}</h3>
-              <p>${p.desc}</p>
-            </div>
-          </a>
-        </div>
-      `).join('');
+          <div class="card">
+            <a href="/produk/${p.id}" style="text-decoration:none; color:inherit; display:block;">
+              <img src="/images/${p.image}" alt="${p.name}" />
+              <div class="card-content">
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+              </div>
+            </a>
+          </div>
+        `).join('');
       productGrid.innerHTML = list;
-    };
-
-    const toggleFavorite = id => {
-      favorites.has(id) ? favorites.delete(id) : favorites.add(id);
-      renderProducts($("searchInput") ? $("searchInput").value : '');
     };
 
     document.addEventListener("DOMContentLoaded", () => {
