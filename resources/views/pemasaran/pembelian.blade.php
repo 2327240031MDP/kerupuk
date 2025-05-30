@@ -84,17 +84,21 @@
       <h2>Keranjang</h2>
       <div id="cartItems"></div>
       <div class="total" id="totalPrice">Total: Rp0</div>
+      <form id="pembelianForm" method="POST" action="{{ route('pembeli.store') }}">
+        @csrf
+        <label><strong>Nama Pembeli:</strong></label>
+        <input type="text" id="nama" name="nama" required />
+
+        <label><strong>Nomor Telepon:</strong></label>
+        <input type="text" id="telepon" name="notelp" required />
+
+        <label><strong>Alamat Pengiriman:</strong></label>
+        <textarea id="alamat" name="alamat" rows="3" required></textarea>
+
+        <input type="hidden" name="dari_web" value="1">
+      </form>
       
-      <label><strong>Nama Pemesan:</strong></label>
-      <input type="text" id="nama" />
-
-      <label><strong>Nomor Telepon:</strong></label>
-      <input type="text" id="telepon" />
-
-      <label><strong>Alamat Pengiriman:</strong></label>
-      <textarea id="alamat" rows="3"></textarea>
-
-      <a id="whatsappLink" href="#" class="btn" target="_blank" disabled>Lanjut ke WhatsApp</a>
+      <button id="whatsappLink" class="btn" disabled>Lanjut ke WhatsApp</button>
     </div>
   </div>
 
@@ -196,6 +200,28 @@
         )
         .join("");
     };
+    
+    document.getElementById("whatsappLink").addEventListener("click", function (e) {
+      e.preventDefault();
+      if (this.hasAttribute("disabled")) return;
+
+      const form = document.getElementById("pembelianForm");
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        },
+        body: formData
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Gagal menyimpan data.");
+          window.open(this.dataset.href, "_blank");
+        })
+        .catch((err) => alert("Gagal menyimpan data pembeli."));
+    });
+
 
     const addToCart = (id) => {
       const p = products.find((x) => x.id === id);
@@ -240,7 +266,7 @@
       $("totalPrice").textContent = `Total: Rp${total.toLocaleString("id-ID")}`;
 
       updateWhatsappLink(total);
-    };
+    }
 
     const updateWhatsappLink = (total) => {
       const nama = $("nama").value.trim();
@@ -269,7 +295,7 @@
         `TOTAL HARGA: Rp${total.toLocaleString("id-ID")}.%0A%0A` +
         `ALAMAT PENGIRIMAN:%0A${encodeURIComponent(alamat)}`;
 
-      link.href = `https://wa.me/${number}?text=${fullMessage}`;
+      link.dataset.href = `https://wa.me/${number}?text=${fullMessage}`;
       link.removeAttribute("disabled");
     };
 
@@ -283,7 +309,7 @@
       if (slides.length > 0) {
         createDots(); 
         showSlide(currentIndex); 
-        setInterval(nextSlide, 5000); //otomatis slide setiap 5 detik
+        setInterval(nextSlide, 5000); 
       }
       const searchInput = $("searchInput");
       if (searchInput) {

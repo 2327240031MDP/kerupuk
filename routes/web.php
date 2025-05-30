@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PembeliController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,8 @@ use App\Http\Controllers\PageController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 Route::get('/', action: function () {
     return view('welcome');
 });
@@ -82,3 +85,5 @@ Route::get('/produk/{id}', function ($id) {
     $product = (object) $products[$id];
     return view('produk.detail', compact('product'));
 });
+
+Route::post('/pembeli', [PembeliController::class, 'store'])->name('pembeli.store');
