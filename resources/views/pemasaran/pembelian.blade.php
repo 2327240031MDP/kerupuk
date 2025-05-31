@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pembelian Kerupuk - Toko Kerupuk 619</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-dBwEXRJBgrzWZ2vSP1XRVQu/jKkQfbtIsXf1T9pUjE3rVULK4e4I2V6KXfU7uzWq+6YBfZ6inB/b5y3lYzLL7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta name="csrf-token" content="{{ csrf_token() }}"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-dBwEXRJBgrzWZ2vSP1XRVQu/jKkQfbtIsXf1T9pUjE3rVULK4e4I2V6KXfU7uzWq+6YBfZ6inB/b5y3lYzLL7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body { font-family: Arial, sans-serif; padding: 0; margin: 0; background: linear-gradient(135deg, #ffffff, #ffdbdb); color: #333; }
     header { background-color: #b00000; padding: 10px 20px; color: #ffdbdb; display: flex; align-items: center; justify-content: space-between; }
@@ -109,20 +109,13 @@
   </footer>
 
  <script>
-    const products = [
-      { id: 1, name: "Super Kancing", price: 13000, image: "superkancing.jpg" },
-      { id: 2, name: "Kerupuk Sanggul Mini", price: 14000, image: "sanggulmini.jpg" },
-      { id: 3, name: "Kerupuk Sanggul", price: 17000, image: "kerupuksanggul.jpg" },
-      { id: 4, name: "Kerupuk Mawar", price: 10000, image: "kerupukmawar.jpg" },
-      { id: 5, name: "Kerupuk Mawar Udang", price: 10000, image: "kerupukmawarudang.jpg" },
-      { id: 6, name: "Kerupuk Teratai", price: 10000, image: "kerupukteratai.jpg" },
-      { id: 7, name: "Getas", price: 20000, image: "getas.jpg" }
-    ];
+    // Products are now passed from the controller via PHP
+    const products = @json($products);
 
     const adSlider = document.getElementById("adSlider");
     const slides = document.querySelectorAll(".ad-slide");
     const sliderDotsContainer = document.querySelector(".slider-dots");
-    let dots = []; 
+    let dots = [];
     let currentIndex = 0;
 
     function createDots() {
@@ -140,9 +133,7 @@
       if (!adSlider || slides.length === 0 || dots.length === 0) {
         return;
       }
-
       const numSlides = slides.length;
-
       if (index >= numSlides) {
         currentIndex = 0;
       } else if (index < 0) {
@@ -150,9 +141,7 @@
       } else {
         currentIndex = index;
       }
-
       adSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
-
       dots.forEach((dot, i) => {
         dot.classList.toggle("active", i === currentIndex);
       });
@@ -171,7 +160,7 @@
     }
 
     const cart = [];
-    const number = "6282180397844";
+    const number = "6282180397844"; // Nomor WhatsApp Anda
     const $ = (id) => document.getElementById(id);
     function formatTanggalWaktu(date) {
       const bulan = [
@@ -194,7 +183,7 @@
             <img src="/images/${p.image}" alt="${p.name}" />
             <div class="card-content">
               <h3>${p.name}</h3>
-              <p>Rp${p.price.toLocaleString("id-ID")}</p>
+              <p>Rp${parseInt(p.price).toLocaleString("id-ID")}</p>
               <button class="btn" onclick='addToCart(${p.id})'>Tambah ke Keranjang</button>
             </div>
           </div>
@@ -202,7 +191,7 @@
         )
         .join("");
     };
-    
+
     document.getElementById("whatsappLink").addEventListener("click", function (e) {
       e.preventDefault();
       if (this.hasAttribute("disabled")) return;
@@ -210,28 +199,51 @@
       const form = document.getElementById("pembelianForm");
       const formData = new FormData(form);
 
+      // Get CSRF token from meta tag
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
       fetch(form.action, {
         method: "POST",
         headers: {
-          'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+          'X-CSRF-TOKEN': csrfToken, // Add CSRF token to headers
+          'Accept': 'application/json', // Optional: if your backend responds with JSON
         },
         body: formData
       })
-        .then((res) => {
-          if (!res.ok) throw new Error("Gagal menyimpan data.");
-          window.open(this.dataset.href, "_blank");
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; }); // Parse JSON error if available
+            }
+            return response.json();
         })
-        .catch((err) => alert("Gagal menyimpan data pembeli."));
+        .then((data) => {
+          console.log('Data berhasil disimpan:', data); // Log success
+          window.open(this.dataset.href, "_blank"); // Open WhatsApp link
+        })
+        .catch((error) => {
+            console.error('Error:', error); // Log error
+            let errorMessage = "Gagal menyimpan data pembeli.";
+            if (error.errors) { // Check for validation errors from Laravel
+                errorMessage += "\n\nDetails:\n";
+                for (const field in error.errors) {
+                    errorMessage += `- ${error.errors[field].join(', ')}\n`;
+                }
+            } else if (error.message) {
+                errorMessage += `\n\nServer message: ${error.message}`;
+            }
+            alert(errorMessage);
+        });
     });
 
 
     const addToCart = (id) => {
       const p = products.find((x) => x.id === id);
+      if (!p) return; // Product not found
       const item = cart.find((i) => i.id === id);
       if (item) {
         item.qty++;
       } else {
-        cart.push({ ...p, qty: 1 });
+        cart.push({ ...p, qty: 1, price: parseFloat(p.price) }); // Ensure price is a number
       }
       renderCart();
     };
@@ -277,13 +289,13 @@
       const link = $("whatsappLink");
 
       if (!cart.length || !nama || !telepon || !alamat) {
-        link.href = "#";
+        link.dataset.href = "#"; // Use dataset.href for custom data attributes
         link.setAttribute("disabled", true);
         return;
       }
 
       const message = cart
-        .map((i, idx) => `${idx + 1}. ${i.name} - Rp${i.price} x ${i.qty}`)
+        .map((i, idx) => `${idx + 1}. ${i.name} - Rp${i.price.toLocaleString("id-ID")} x ${i.qty}`)
         .join("%0A");
 
       const now = new Date();
@@ -305,19 +317,14 @@
     $("telepon").addEventListener("input", renderCart);
     $("alamat").addEventListener("input", renderCart);
 
-    renderProducts();
-
     document.addEventListener("DOMContentLoaded", () => {
       if (slides.length > 0) {
-        createDots(); 
-        showSlide(currentIndex); 
-        setInterval(nextSlide, 5000); 
+        createDots();
+        showSlide(currentIndex);
+        setInterval(nextSlide, 5000);
       }
-      const searchInput = $("searchInput");
-      if (searchInput) {
-        searchInput.addEventListener('input', e => renderProducts(e.target.value));
-      }
-      renderProducts();
+      renderProducts(); // Initial render of products
+      renderCart(); // Initial render of cart (empty)
     });
   </script>
 </body>

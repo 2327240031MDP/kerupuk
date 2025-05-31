@@ -86,20 +86,13 @@
   </footer>
 
   <script>
-    const products = [
-      { id: 1, name: "Super Kancing", image: "superkancing.jpg", desc: "Kerupuk udang renyah berbentuk kancing, cocok untuk lauk atau camilan." },
-      { id: 2, name: "Kerupuk Sanggul Mini", image: "sanggulmini.jpg", desc: "Kerupuk ikan tradisional khas pesisir dengan rasa gurih menggoda." },
-      { id: 3, name: "Kerupuk Sanggul", image: "kerupuksanggul.jpg", desc: "Kerupuk khas berbentuk sanggul dengan rasa gurih dan tekstur renyah." },
-      { id: 4, name: "Kerupuk Mawar", image: "kerupukmawar.jpg", desc: "Varian klasik kerupuk udang dengan aroma khas dan tekstur renyah." },
-      { id: 5, name: "Kerupuk Mawar Udang", image: "kerupukmawarudang.jpg", desc: "Kerupuk ikan dengan bumbu khas dan rasa autentik Indonesia." },
-      { id: 6, name: "Kerupuk Teratai", image: "kerupukteratai.jpg", desc: "Kerupuk bawang ringan dan renyah dengan aroma bawang menggoda." },
-      { id: 7, name: "Getas", image: "getas.jpg", desc: "Kerupuk ikan padat rasa, cocok untuk pelengkap makanan berat." }
-    ];
+    // Products are now passed from the controller via PHP
+    const products = @json($products);
 
     const adSlider = document.getElementById("adSlider");
     const slides = document.querySelectorAll(".ad-slide");
     const sliderDotsContainer = document.querySelector(".slider-dots");
-    let dots = []; 
+    let dots = [];
     let currentIndex = 0;
 
     function createDots() {
@@ -117,9 +110,7 @@
       if (!adSlider || slides.length === 0 || dots.length === 0) {
         return;
       }
-
       const numSlides = slides.length;
-
       if (index >= numSlides) {
         currentIndex = 0;
       } else if (index < 0) {
@@ -127,9 +118,7 @@
       } else {
         currentIndex = index;
       }
-
       adSlider.style.transform = `translateX(-${currentIndex * 100}%)`;
-
       dots.forEach((dot, i) => {
         dot.classList.toggle("active", i === currentIndex);
       });
@@ -147,8 +136,7 @@
       showSlide(index);
     }
 
-    // let favorites = new Set(); /* Removed */
-    const $ = id => document.getElementById(id); 
+    const $ = id => document.getElementById(id);
 
     const renderProducts = (filter = '') => {
       const productGrid = $("productGrid");
@@ -172,15 +160,15 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       if (slides.length > 0) {
-        createDots(); 
-        showSlide(currentIndex); 
+        createDots();
+        showSlide(currentIndex);
         setInterval(nextSlide, 5000); //otomatis slide setiap 5 detik
       }
       const searchInput = $("searchInput");
       if (searchInput) {
         searchInput.addEventListener('input', e => renderProducts(e.target.value));
       }
-      renderProducts();
+      renderProducts(); // Initial render
     });
   </script>
 </body>

@@ -32,7 +32,7 @@
     <div class="container">
         <a href="/produk" class="back-link">&larr; Kembali ke Produk</a>
         <h1>{{ $product->name }}</h1>
-        <img src="/images/{{ $product->image }}" alt="{{ $product->name }}" />
+        <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" />
         <p style="font-weight:bold; font-size:18px; color:#b00000;">Harga: Rp {{ number_format($product->price, 0, ',', '.') }}</p>
         <p>{{ $product->desc_long }}</p>
     </div>
@@ -43,4 +43,3 @@
     </footer>
 </body>
 </html>
-
