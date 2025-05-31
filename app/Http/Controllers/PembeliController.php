@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pembeli;
+<<<<<<< Updated upstream
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+=======
+use App\Models\Product; // Tambahkan ini
+use Illuminate\Support\Facades\DB; // Tambahkan ini untuk transaksi database
+>>>>>>> Stashed changes
 
 class PembeliController extends Controller
 {
@@ -16,6 +21,7 @@ class PembeliController extends Controller
             'nama' => 'required|string|max:255',
             'notelp' => 'required|string|max:20',
             'alamat' => 'required|string',
+<<<<<<< Updated upstream
             'dari_web' => 'nullable|boolean',
             'cart' => 'required|json'
         ]);
@@ -77,14 +83,70 @@ class PembeliController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error storing pembelian: ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
+=======
+            'cart' => 'required|string', // cart akan dikirim sebagai JSON string
+            'dari_web' => 'sometimes|boolean',
+        ]);
+
+        // Decode cart dari JSON string
+        $cartItems = json_decode($validated['cart'], true);
+
+        if (empty($cartItems)) {
+            return response()->json(['message' => 'Keranjang tidak boleh kosong.'], 400);
+        }
+
+        $totalHargaKeseluruhan = 0;
+        $produkUntukDisimpan = [];
+
+        foreach ($cartItems as $item) {
+            $product = Product::find($item['id']);
+            if ($product) {
+                $subtotal = $product->price * $item['qty'];
+                $totalHargaKeseluruhan += $subtotal;
+                $produkUntukDisimpan[$item['id']] = [
+                    'quantity' => $item['qty'],
+                    'subtotal' => $subtotal,
+                ];
+            } else {
+                // Handle jika produk tidak ditemukan, mungkin throw error atau skip
+                return response()->json(['message' => 'Produk dengan ID ' . $item['id'] . ' tidak ditemukan.'], 404);
+            }
+        }
+        
+        // Gunakan transaksi database untuk memastikan integritas data
+        DB::beginTransaction();
+        try {
+            $pembeli = Pembeli::create([
+                'nama' => $validated['nama'],
+                'notelp' => $validated['notelp'],
+                'alamat' => $validated['alamat'],
+                'dari_web' => $request->input('dari_web', 1), // Default ke 1 jika dari_web
+                'total_harga' => $totalHargaKeseluruhan,
+            ]);
+
+            // Simpan produk ke tabel pivot
+            $pembeli->products()->attach($produkUntukDisimpan);
+
+            DB::commit(); // Jika semua berhasil, commit transaksi
+
+            return response()->json(['message' => 'Data pembelian berhasil disimpan.'], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // Jika ada error, rollback transaksi
+>>>>>>> Stashed changes
             return response()->json(['message' => 'Gagal menyimpan data pembelian: ' . $e->getMessage()], 500);
         }
     }
 
     public function index()
     {
+<<<<<<< Updated upstream
         // Eager load relasi mainProduct jika akan ditampilkan di histori
         $pembelian = Pembeli::with(['products', 'mainProduct'])->latest()->get();
+=======
+        // Eager load relasi 'products'
+        $pembelian = Pembeli::with('products')->latest()->get();
+>>>>>>> Stashed changes
         return view('pemasaran.index', compact('pembelian'));
     }
 }

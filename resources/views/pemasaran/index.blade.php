@@ -10,15 +10,21 @@
         .navbar-title { font-size: 20px; font-weight: bold; }
         .nav-links a { color: #ffdbdb; margin-left: 20px; text-decoration: none; font-weight: bold; }
         .nav-links a:hover { text-decoration: underline; }
-        .container { max-width: 1000px; margin: 40px auto; background: #fff0f0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 30px; }
+        .container { max-width: 1200px; margin: 40px auto; background: #fff0f0; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 30px; }
         h1 { color: #b00000; text-align: center; margin-bottom: 25px; }
         h3 { text-align: center; margin-bottom: 20px; color: #b00000; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 14px; border-bottom: 1px solid #ccc; text-align: left; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 14px; border-bottom: 1px solid #ccc; text-align: left; vertical-align: top; } /* vertical-align: top ditambahkan */
         th { background: #b00000; color: white; }
         tr:hover { background: #ffeaea; }
+<<<<<<< Updated upstream
         .product-list { list-style: none; padding-left: 0; margin-top: 5px; }
         .product-list li { font-size: 0.9em; color: #555; }
+=======
+        .product-list { margin-top: 5px; padding-left: 0; list-style: none; } /* Dihilangkan padding-left jika tidak ingin indentasi */
+        .product-list li { font-size: 0.9em; margin-bottom: 4px; }
+        .total-column { font-weight: bold; color: #b00000; }
+>>>>>>> Stashed changes
         .ad-container { margin: 40px 0; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
         .ad-slider { display: flex; transition: transform 0.5s ease; }
         .ad-slide { min-width: 100%; box-sizing: border-box; }
@@ -50,9 +56,10 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama</th>
+                <th>Nama Pembeli</th>
                 <th>No. Telepon</th>
                 <th>Alamat</th>
+<<<<<<< Updated upstream
                 <th>Total Harga</th>
                 <th>Produk Dibeli</th>
                 <th>Dari Website?</th>
@@ -73,15 +80,46 @@
                                 @foreach($itemPembelian->products as $product)
                                     <li>
                                         {{ $product->name }} ({{ $product->pivot->quantity }}x Rp {{ number_format($product->pivot->price_at_purchase, 0, ',', '.') }})
+=======
+                <th>Produk Dibeli</th>
+                <th>Total Harga</th>
+                <th>Tgl Pembelian</th>
+                <th>Dari Web?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($pembelian as $index => $beli)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $beli->nama }}</td>
+                    <td>{{ $beli->notelp }}</td>
+                    <td>{{ $beli->alamat }}</td>
+                    <td>
+                        @if ($beli->products->isNotEmpty())
+                            <ul class="product-list">
+                                @foreach ($beli->products as $product)
+                                    <li>
+                                        {{ $product->name }} x{{ $product->pivot->quantity }} 
+                                        Rp {{ number_format($product->pivot->subtotal, 0, ',', '.') }}
+>>>>>>> Stashed changes
                                     </li>
                                 @endforeach
                             </ul>
                         @else
+<<<<<<< Updated upstream
                             -
                         @endif
                     </td>
                     <td>{{ $itemPembelian->dari_web ? 'Ya' : 'Tidak' }}</td>
                     <td>{{ $itemPembelian->created_at->format('d M Y, H:i') }}</td>
+=======
+                            Tidak ada produk.
+                        @endif
+                    </td>
+                    <td class="total-column">Rp {{ number_format($beli->total_harga, 0, ',', '.') }}</td>
+                    <td>{{ $beli->created_at->format('d M Y, H:i') }}</td>
+                    <td>{{ $beli->dari_web ? 'Ya' : 'Tidak' }}</td>
+>>>>>>> Stashed changes
                 </tr>
             @empty
                 <tr>
@@ -119,7 +157,11 @@
     let currentIndex = 0;
 
     function createDots() {
+<<<<<<< Updated upstream
         if (!sliderDotsContainer || slides.length === 0) return; // Cek null & panjang
+=======
+        if (!sliderDotsContainer || slides.length === 0) return;
+>>>>>>> Stashed changes
         slides.forEach((_, i) => {
             const dot = document.createElement("span");
             dot.classList.add("dot");
@@ -130,7 +172,11 @@
     }
 
     function showSlide(index) {
+<<<<<<< Updated upstream
         if (!adSlider || slides.length === 0 || dots.length === 0) return; // Cek null & panjang
+=======
+        if (!adSlider || slides.length === 0 || dots.length === 0) return;
+>>>>>>> Stashed changes
         const numSlides = slides.length;
         if (index >= numSlides) {
             currentIndex = 0;
@@ -145,20 +191,16 @@
         });
     }
 
-    function prevSlide() {
-        showSlide(currentIndex - 1);
-    }
-
-    function nextSlide() {
-        showSlide(currentIndex + 1);
-    }
-
-    function currentSlide(index) {
-        showSlide(index);
-    }
+    function prevSlide() { showSlide(currentIndex - 1); }
+    function nextSlide() { showSlide(currentIndex + 1); }
+    function currentSlide(index) { showSlide(index); }
 
     document.addEventListener("DOMContentLoaded", () => {
+<<<<<<< Updated upstream
         if (slides.length > 0 && adSlider && sliderDotsContainer) { // Cek elemen ada
+=======
+        if (slides.length > 0) {
+>>>>>>> Stashed changes
             createDots();
             showSlide(currentIndex);
             setInterval(nextSlide, 5000);

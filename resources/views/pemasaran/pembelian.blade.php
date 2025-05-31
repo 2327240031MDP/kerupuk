@@ -97,11 +97,17 @@
 
         <label><strong>Alamat Pengiriman:</strong></label>
         <textarea id="alamat" name="alamat" rows="3" required></textarea>
+<<<<<<< Updated upstream
 
         <input type="hidden" name="dari_web" value="1">
         <input type="hidden" name="cart" id="cartData"> </form>
+=======
+        
+        <input type="hidden" name="cart" id="cartData"> <input type="hidden" name="dari_web" value="1">
+      </form>
+>>>>>>> Stashed changes
       
-      <button id="whatsappLink" class="btn" disabled>Lanjut ke WhatsApp</button>
+      <button id="whatsappLink" class="btn" disabled>Lanjut ke WhatsApp & Simpan</button>
     </div>
   </div>
 
@@ -110,7 +116,12 @@
   </footer>
 
  <script>
+<<<<<<< Updated upstream
     const products = @json($products);
+=======
+    // Products are now passed from the controller via PHP
+    const products = @json($products); //
+>>>>>>> Stashed changes
 
     const adSlider = document.getElementById("adSlider");
     const slides = document.querySelectorAll(".ad-slide");
@@ -202,24 +213,46 @@
 
       const form = document.getElementById("pembelianForm");
       const formData = new FormData(form);
+<<<<<<< Updated upstream
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+=======
+      
+      // Masukkan data keranjang sebagai JSON string ke FormData
+      const cartForSubmit = cart.map(item => ({ id: item.id, qty: item.qty, price: item.price }));
+      formData.set('cart', JSON.stringify(cartForSubmit)); 
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); //
+>>>>>>> Stashed changes
 
       fetch(form.action, {
         method: "POST",
         headers: {
+<<<<<<< Updated upstream
           'X-CSRF-TOKEN': csrfToken,
           'Accept': 'application/json',
+=======
+          'X-CSRF-TOKEN': csrfToken, 
+          'Accept': 'application/json', 
+>>>>>>> Stashed changes
         },
         body: formData
       })
         .then(response => {
             if (!response.ok) {
+<<<<<<< Updated upstream
                 return response.json().then(err => { throw err; });
+=======
+                return response.json().then(err => { 
+                    console.error('Server error response:', err);
+                    throw err; 
+                });
+>>>>>>> Stashed changes
             }
             return response.json();
         })
         .then((data) => {
           console.log('Data berhasil disimpan:', data);
+<<<<<<< Updated upstream
           // Buka link WhatsApp setelah berhasil
           const waLink = this.dataset.href; // Ambil dari data-href
           if (waLink && waLink !== "#") {
@@ -237,16 +270,33 @@
             let errorMessage = "Gagal menyimpan data pembeli.";
             if (error.errors) { 
                 errorMessage += "\n\nDetails:\n";
+=======
+          alert('Data pembelian berhasil disimpan! Mengarahkan ke WhatsApp...');
+          window.open(this.dataset.href, "_blank");
+          
+          // Kosongkan keranjang dan form setelah berhasil
+          cart.length = 0; 
+          form.reset(); 
+          renderCart(); 
+        })
+        .catch((error) => {
+            console.error('Fetch error:', error); 
+            let errorMessage = "Gagal menyimpan data pembeli.";
+            if (error && error.message) {
+                 errorMessage += `\n\nPesan: ${error.message}`;
+            }
+            if (error && error.errors) { 
+                errorMessage += "\n\nDetail Validasi:\n";
+>>>>>>> Stashed changes
                 for (const field in error.errors) {
-                    errorMessage += `- ${error.errors[field].join(', ')}\n`;
+                    errorMessage += `- ${field}: ${error.errors[field].join(', ')}\n`;
                 }
-            } else if (error.message) {
-                errorMessage += `\n\nServer message: ${error.message}`;
             }
             alert(errorMessage);
         });
     });
 
+<<<<<<< Updated upstream
 
     const addToCart = (id) => {
       const p = products.find((x) => x.id === id);
@@ -256,6 +306,19 @@
         item.qty++;
       } else {
         cart.push({ ...p, qty: 1, price: parseFloat(p.price) });
+=======
+    const addToCart = (productId) => {
+      const product = products.find((p) => p.id === productId); 
+      if (!product) {
+          console.error("Produk tidak ditemukan dengan ID:", productId);
+          return; 
+      }
+      const item = cart.find((i) => i.id === productId);
+      if (item) {
+        item.qty++;
+      } else {
+        cart.push({ id: product.id, name: product.name, image: product.image, price: parseFloat(product.price), qty: 1 });
+>>>>>>> Stashed changes
       }
       renderCart();
     };
@@ -268,6 +331,41 @@
         cart.splice(cart.indexOf(item), 1);
       }
       renderCart();
+    };
+    
+    const updateWhatsappLink = (total) => {
+      const nama = $("nama").value.trim();
+      const telepon = $("telepon").value.trim();
+      const alamat = $("alamat").value.trim();
+      const link = $("whatsappLink");
+      const cartDataInput = $("cartData"); 
+
+      const cartForSubmit = cart.map(item => ({ id: item.id, qty: item.qty, price: item.price }));
+      cartDataInput.value = JSON.stringify(cartForSubmit);
+
+      if (!cart.length || !nama || !telepon || !alamat) {
+        link.dataset.href = "#"; 
+        link.setAttribute("disabled", true);
+        return;
+      }
+
+      const message = cart
+        .map((i, idx) => `${idx + 1}. ${i.name} - Rp${i.price.toLocaleString("id-ID")} x ${i.qty}`)
+        .join("%0A");
+
+      const now = new Date();
+      const waktuPesan = formatTanggalWaktu(now);
+
+      const fullMessage =
+        `WAKTU PEMESANAN: ${encodeURIComponent(waktuPesan)}.%0A` +
+        `NAMA PEMESAN: ${encodeURIComponent(nama)}.%0A` +
+        `No. HP: ${encodeURIComponent(telepon)}.%0A%0A` +
+        `Saya ingin memesan:%0A${message}.%0A%0A` +
+        `TOTAL HARGA: Rp${total.toLocaleString("id-ID")}.%0A%0A` +
+        `ALAMAT PENGIRIMAN:%0A${encodeURIComponent(alamat)}`;
+
+      link.dataset.href = `https://wa.me/${number}?text=${fullMessage}`;
+      link.removeAttribute("disabled");
     };
 
     const renderCart = () => {
@@ -294,6 +392,7 @@
       updateWhatsappLink(total);
     }
 
+<<<<<<< Updated upstream
     const updateWhatsappLink = (total) => {
       const nama = $("nama").value.trim();
       const telepon = $("telepon").value.trim();
@@ -325,6 +424,8 @@
       link.dataset.href = `https://wa.me/${number}?text=${fullMessage}`;
       link.removeAttribute("disabled");
     };
+=======
+>>>>>>> Stashed changes
 
     $("nama").addEventListener("input", renderCart);
     $("telepon").addEventListener("input", renderCart);

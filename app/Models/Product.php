@@ -15,7 +15,7 @@ class Product extends Model
         'price',
         'desc',
         'desc_long',
-    ];
+    ]; //
 
     /**
      * The attributes that should be cast.
@@ -24,6 +24,7 @@ class Product extends Model
      */
     protected $casts = [
         'price' => 'decimal:0',
+<<<<<<< Updated upstream
     ];
 
     /**
@@ -33,6 +34,17 @@ class Product extends Model
     {
         return $this->belongsToMany(Pembeli::class, 'pembelian_product', 'product_id', 'pembeli_notelp')
                     ->withPivot('quantity', 'price_at_purchase')
+=======
+    ]; //
+
+    /**
+     * Pembelian yang mencakup produk ini.
+     */
+    public function pembeli()
+    {
+        return $this->belongsToMany(Pembeli::class, 'pembelian_produk', 'product_id', 'pembeli_notelp')
+                    ->withPivot('quantity', 'subtotal') // Ambil juga data dari tabel pivot
+>>>>>>> Stashed changes
                     ->withTimestamps();
     }
 }

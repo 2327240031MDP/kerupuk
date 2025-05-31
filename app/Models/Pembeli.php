@@ -13,6 +13,7 @@ class Pembeli extends Model
     protected $primaryKey = 'notelp';
     public $incrementing = false;
     protected $keyType = 'string';
+<<<<<<< Updated upstream
     // Tambahkan 'product_id_main' ke fillable
     protected $fillable = ['nama', 'notelp', 'alamat', 'dari_web', 'total_harga', 'product_id_main'];
 
@@ -33,4 +34,17 @@ class Pembeli extends Model
     {
         return $this->belongsTo(Product::class, 'product_id_main');
     }
+=======
+    protected $fillable = ['nama', 'notelp', 'alamat', 'dari_web', 'total_harga']; // Tambahkan 'total_harga'
+
+    /**
+     * Produk yang dibeli dalam pembelian ini.
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'pembelian_produk', 'pembeli_notelp', 'product_id')
+                    ->withPivot('quantity', 'subtotal') // Ambil juga data dari tabel pivot
+                    ->withTimestamps();
+    }
+>>>>>>> Stashed changes
 }
