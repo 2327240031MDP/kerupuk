@@ -17,6 +17,8 @@
         th, td { padding: 14px; border-bottom: 1px solid #ccc; text-align: left; }
         th { background: #b00000; color: white; }
         tr:hover { background: #ffeaea; }
+        .product-list { list-style: none; padding-left: 0; margin-top: 5px; }
+        .product-list li { font-size: 0.9em; color: #555; }
         .ad-container { margin: 40px 0; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
         .ad-slider { display: flex; transition: transform 0.5s ease; }
         .ad-slide { min-width: 100%; box-sizing: border-box; }
@@ -51,21 +53,39 @@
                 <th>Nama</th>
                 <th>No. Telepon</th>
                 <th>Alamat</th>
+                <th>Total Harga</th>
+                <th>Produk Dibeli</th>
                 <th>Dari Website?</th>
+                <th>Tanggal</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($pembelian as $index => $pembeli)
+            @forelse ($pembelian as $index => $itemPembelian)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $pembeli->nama }}</td>
-                    <td>{{ $pembeli->notelp }}</td>
-                    <td>{{ $pembeli->alamat }}</td>
-                    <td>{{ $pembeli->dari_web ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $itemPembelian->nama }}</td>
+                    <td>{{ $itemPembelian->notelp }}</td>
+                    <td>{{ $itemPembelian->alamat }}</td>
+                    <td>Rp {{ number_format($itemPembelian->total_harga, 0, ',', '.') }}</td>
+                    <td>
+                        @if($itemPembelian->products->isNotEmpty())
+                            <ul class="product-list">
+                                @foreach($itemPembelian->products as $product)
+                                    <li>
+                                        {{ $product->name }} ({{ $product->pivot->quantity }}x Rp {{ number_format($product->pivot->price_at_purchase, 0, ',', '.') }})
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>{{ $itemPembelian->dari_web ? 'Ya' : 'Tidak' }}</td>
+                    <td>{{ $itemPembelian->created_at->format('d M Y, H:i') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align:center;">Belum ada data pembeli.</td>
+                    <td colspan="8" style="text-align:center;">Belum ada data pembelian.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -99,6 +119,7 @@
     let currentIndex = 0;
 
     function createDots() {
+        if (!sliderDotsContainer || slides.length === 0) return; // Cek null & panjang
         slides.forEach((_, i) => {
             const dot = document.createElement("span");
             dot.classList.add("dot");
@@ -109,6 +130,7 @@
     }
 
     function showSlide(index) {
+        if (!adSlider || slides.length === 0 || dots.length === 0) return; // Cek null & panjang
         const numSlides = slides.length;
         if (index >= numSlides) {
             currentIndex = 0;
@@ -136,9 +158,11 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        createDots();
-        showSlide(currentIndex);
-        setInterval(nextSlide, 5000);
+        if (slides.length > 0 && adSlider && sliderDotsContainer) { // Cek elemen ada
+            createDots();
+            showSlide(currentIndex);
+            setInterval(nextSlide, 5000);
+        }
     });
 </script>
 

@@ -45,14 +45,14 @@ class ProductSeeder extends Seeder
                 'image' => 'kerupukmawar.jpg',
                 'price' => 10000,
                 'desc' => 'Varian klasik kerupuk udang dengan aroma khas dan tekstur renyah.',
-                'desc_long' => 'Kerupuk Mawar adalah varian klasik kerupuk udang yang memiliki aroma khas udang laut dan tekstur renyah sempurna. Cocok sebagai teman makan atau camilan di waktu senggang.',
+                'desc_long' => 'Kerupuk Mawar adalah varian klasik kerupuk ikan segar yang memiliki aroma khas udang laut dan tekstur renyah sempurna. Cocok sebagai teman makan atau camilan di waktu senggang.',
             ],
             [
                 'name' => 'Kerupuk Mawar Udang',
                 'image' => 'kerupukmawarudang.jpg',
                 'price' => 10000,
                 'desc' => 'Kerupuk ikan dengan bumbu khas dan rasa autentik Indonesia.',
-                'desc_long' => 'Kerupuk Mawar Udang terbuat dari ikan segar dengan bumbu khas tradisional yang memberikan cita rasa autentik Indonesia. Teksturnya renyah dan gurih, pas untuk menemani hidangan utama Anda.',
+                'desc_long' => 'Kerupuk Mawar Udang terbuat dari udang dengan bumbu khas tradisional yang memberikan cita rasa autentik Indonesia. Teksturnya renyah dan gurih, pas untuk menemani hidangan utama Anda.',
             ],
             [
                 'name' => 'Kerupuk Teratai',

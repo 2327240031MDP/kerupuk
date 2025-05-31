@@ -25,4 +25,14 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:0',
     ];
+
+    /**
+     * The pembelian records that belong to the Product.
+     */
+    public function pembelian()
+    {
+        return $this->belongsToMany(Pembeli::class, 'pembelian_product', 'product_id', 'pembeli_notelp')
+                    ->withPivot('quantity', 'price_at_purchase')
+                    ->withTimestamps();
+    }
 }
