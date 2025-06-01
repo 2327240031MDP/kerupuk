@@ -51,6 +51,7 @@
                 <th>Nama</th>
                 <th>No. Telepon</th>
                 <th>Alamat</th>
+                <th>Waktu</th>
                 <th>Dari Website?</th>
             </tr>
         </thead>
@@ -61,6 +62,7 @@
                     <td>{{ $pembeli->nama }}</td>
                     <td>{{ $pembeli->notelp }}</td>
                     <td>{{ $pembeli->alamat }}</td>
+                    <td>{{ $pembeli->created_at->timezone('Asia/Jakarta')->format('d M Y, H:i:s') }}</td>
                     <td>{{ $pembeli->dari_web ? 'Ya' : 'Tidak' }}</td>
                 </tr>
             @empty
