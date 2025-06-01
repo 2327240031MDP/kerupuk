@@ -86,15 +86,7 @@
   </footer>
 
   <script>
-    const products = [
-      { id: 1, name: "Super Kancing", image: "superkancing.jpg", desc: "Kerupuk udang renyah berbentuk kancing, cocok untuk lauk atau camilan." },
-      { id: 2, name: "Kerupuk Sanggul Mini", image: "sanggulmini.jpg", desc: "Kerupuk ikan tradisional khas pesisir dengan rasa gurih menggoda." },
-      { id: 3, name: "Kerupuk Sanggul", image: "kerupuksanggul.jpg", desc: "Kerupuk khas berbentuk sanggul dengan rasa gurih dan tekstur renyah." },
-      { id: 4, name: "Kerupuk Mawar", image: "kerupukmawar.jpg", desc: "Varian klasik kerupuk udang dengan aroma khas dan tekstur renyah." },
-      { id: 5, name: "Kerupuk Mawar Udang", image: "kerupukmawarudang.jpg", desc: "Kerupuk ikan dengan bumbu khas dan rasa autentik Indonesia." },
-      { id: 6, name: "Kerupuk Teratai", image: "kerupukteratai.jpg", desc: "Kerupuk bawang ringan dan renyah dengan aroma bawang menggoda." },
-      { id: 7, name: "Getas", image: "getas.jpg", desc: "Kerupuk ikan padat rasa, cocok untuk pelengkap makanan berat." }
-    ];
+    const products = @json($products);
 
     const adSlider = document.getElementById("adSlider");
     const slides = document.querySelectorAll(".ad-slide");

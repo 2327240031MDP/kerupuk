@@ -109,15 +109,7 @@
   </footer>
 
  <script>
-    const products = [
-      { id: 1, name: "Super Kancing", price: 13000, image: "superkancing.jpg" },
-      { id: 2, name: "Kerupuk Sanggul Mini", price: 14000, image: "sanggulmini.jpg" },
-      { id: 3, name: "Kerupuk Sanggul", price: 17000, image: "kerupuksanggul.jpg" },
-      { id: 4, name: "Kerupuk Mawar", price: 10000, image: "kerupukmawar.jpg" },
-      { id: 5, name: "Kerupuk Mawar Udang", price: 10000, image: "kerupukmawarudang.jpg" },
-      { id: 6, name: "Kerupuk Teratai", price: 10000, image: "kerupukteratai.jpg" },
-      { id: 7, name: "Getas", price: 20000, image: "getas.jpg" }
-    ];
+    const products = @json($products);
 
     const adSlider = document.getElementById("adSlider");
     const slides = document.querySelectorAll(".ad-slide");
@@ -208,6 +200,27 @@
       if (this.hasAttribute("disabled")) return;
 
       const form = document.getElementById("pembelianForm");
+
+      
+      form.querySelectorAll('input[name="produk_id[]"], input[name="qty[]"]').forEach(el => el.remove());
+
+      
+      cart.forEach(item => {
+        const inputId = document.createElement("input");
+        inputId.type = "hidden";
+        inputId.name = "produk_id[]";
+        inputId.value = item.id;
+
+        const inputQty = document.createElement("input");
+        inputQty.type = "hidden";
+        inputQty.name = "qty[]";
+        inputQty.value = item.qty;
+
+        form.appendChild(inputId);
+        form.appendChild(inputQty);
+      });
+
+      
       const formData = new FormData(form);
 
       fetch(form.action, {
@@ -284,20 +297,27 @@
 
       const message = cart
         .map((i, idx) => `${idx + 1}. ${i.name} - Rp${i.price} x ${i.qty}`)
-        .join("%0A");
+        .join("\n");
 
       const now = new Date();
       const waktuPesan = formatTanggalWaktu(now);
 
-      const fullMessage =
-        `WAKTU PEMESANAN: ${encodeURIComponent(waktuPesan)}.%0A` +
-        `NAMA PEMESAN: ${encodeURIComponent(nama)}.%0A` +
-        `No. HP: ${encodeURIComponent(telepon)}.%0A%0A` +
-        `Saya ingin memesan:%0A${message}.%0A%0A` +
-        `TOTAL HARGA: Rp${total.toLocaleString("id-ID")}.%0A%0A` +
-        `ALAMAT PENGIRIMAN:%0A${encodeURIComponent(alamat)}`;
+      const fullMessageRaw = `
+    WAKTU PEMESANAN: ${waktuPesan}
+    NAMA PEMESAN: ${nama}
+    No. HP: ${telepon}
 
-      link.dataset.href = `https://wa.me/${number}?text=${fullMessage}`;
+    Saya ingin memesan:
+    ${message}
+
+    TOTAL HARGA: Rp${total.toLocaleString("id-ID")}
+
+    ALAMAT PENGIRIMAN:
+    ${alamat}
+    `;
+
+      const encoded = encodeURIComponent(fullMessageRaw.trim());
+      link.dataset.href = `https://wa.me/${number}?text=${encoded}`;
       link.removeAttribute("disabled");
     };
 

@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PembeliController;
+use App\Http\Controllers\ProdukController;
+use App\Models\Produk;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +28,8 @@ Route::get('/produk', function () {
 });
 
 Route::get('/pembelian', function () {
-    return view('pemasaran.pembelian');
+    $products = Produk::all();
+    return view('pemasaran.pembelian', compact('products'));
 });
 
 Route::get('/produk/{id}', function ($id) {
@@ -89,3 +93,7 @@ $products = [
 Route::post('/pembeli', [PembeliController::class, 'store'])->name('pembeli.store');
 
 Route::get('/histori', [PembeliController::class, 'index'])->name('pemasaran.index');
+
+Route::get('/produk', [ProdukController::class, 'index']);
+Route::get('/produk/{id}', [ProdukController::class, 'show']);
+

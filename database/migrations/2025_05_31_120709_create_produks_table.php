@@ -11,17 +11,19 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
 {
-    Schema::create('pembelis', function (Blueprint $table) {
-        $table->string('notelp')->primary();
-        $table->string('nama');
-        $table->text('alamat');
-        $table->boolean('dari_web')->default(0);
+    Schema::create('produks', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('image');
+        $table->integer('price');
+        $table->text('desc');
+        $table->longText('desc_long');
+        $table->integer('stock')->default(0);
         $table->timestamps();
     });
 }
-
 
     /**
      * Reverse the migrations.
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pembelis');
+        Schema::dropIfExists('produks');
     }
 };

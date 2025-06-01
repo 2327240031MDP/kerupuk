@@ -4,11 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Pembeli extends Model
 {
+    public function produk()
+    {
+        return $this->belongsToMany(Produk::class, 'pembeli_produk')
+                    ->withPivot('qty')
+                    ->withTimestamps();
+    }
     protected $table = 'pembelis';
-    protected $primaryKey = 'notelp'; // karena pakai notelp sebagai primary key
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = ['nama', 'notelp', 'alamat', 'dari_web'];
 }
