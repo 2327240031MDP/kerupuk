@@ -241,9 +241,18 @@
     const addToCart = (id) => {
       const p = products.find((x) => x.id === id);
       const item = cart.find((i) => i.id === id);
+
       if (item) {
+        if (item.qty + 1 > p.stock) {
+          alert(`Maaf Stok ${p.name} tidak cukup, sisa stok: ${p.stock}`);
+          return;
+        }
         item.qty++;
       } else {
+        if (p.stock < 1) {
+          alert(`Maaf Stok ${p.name} tidak cukup, sisa stok: ${p.stock}`);
+          return;
+        }
         cart.push({ ...p, qty: 1 });
       }
       renderCart();
@@ -251,13 +260,21 @@
 
     const changeQty = (id, delta) => {
       const item = cart.find((i) => i.id === id);
+      const p = products.find((x) => x.id === id);
       if (!item) return;
+
+      if (delta > 0 && item.qty + delta > p.stock) {
+        alert(`Maaf Stok ${p.name} tidak cukup, sisa stok: ${p.stock}`);
+        return;
+      }
+
       item.qty += delta;
       if (item.qty <= 0) {
         cart.splice(cart.indexOf(item), 1);
       }
       renderCart();
     };
+
 
     const renderCart = () => {
       $("cartItems").innerHTML = cart
