@@ -92,7 +92,8 @@
         <input type="text" id="nama" name="nama" required />
 
         <label><strong>Nomor Telepon:</strong></label>
-        <input type="text" id="telepon" name="notelp" required />
+        <input type="text" id="telepon" name="notelp" required inputmode="numeric" />
+        <small id="teleponError" style="color: red; display: none;">Nomor telepon harus valid (hanya angka).</small><br>
 
         <label><strong>Alamat Pengiriman:</strong></label>
         <textarea id="alamat" name="alamat" rows="3" required></textarea>
@@ -355,6 +356,21 @@
         searchInput.addEventListener('input', e => renderProducts(e.target.value));
       }
       renderProducts();
+    });
+
+    $("telepon").addEventListener("input", function () {
+      const telepon = this.value;
+      const error = $("teleponError");
+
+      const angkaSaja = telepon.replace(/[^\d]/g, "");
+      if (telepon !== angkaSaja) {
+        this.value = angkaSaja;
+        error.style.display = "block";
+      } else {
+        error.style.display = "none";
+      }
+
+      renderCart();
     });
   </script>
 </body>
