@@ -35,6 +35,9 @@
         <img src="/images/{{ $product->image }}" alt="{{ $product->name }}" />
         <p style="font-weight:bold; font-size:18px; color:#b00000;">Harga: Rp {{ number_format($product->price, 0, ',', '.') }}</p>
         <p>{{ $product->desc_long }}</p>
+        <p style="font-weight: bold; font-size: 16px; color: #555;">
+        Stok Tersedia: {{ $product->stock }} </p>
+</p>
     </div>
 
 
